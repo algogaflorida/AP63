@@ -1,51 +1,51 @@
 <?php
-require_once "autoload.php";
+require_once 'autoloader.php';
+$gestor = new Audioteca();
 
-$gestor = new GestorProducto();
-//Agregamos 50 productos
-for ($i=1;$i<=50;$i++){
-    $producto = new Disco($i, "Disco$i", $i*10);
-    $gestor->agregar($producto);
+for ($i = 1; $i <= 50; $i++) {
+    $disco = new Disco("Disco $i", "Artista $i", "Género $i", $i * 10, $i);
+    $gestor->agregarPista($disco);
 }
 
-//Actualizamos 2 productos
-$gestor->actualizar(10, "nuevoDisco10", 99);
-$gestor->actualizar(20, "nuevoDisco20", 99);
+$gestor->actualizarPista(10, "Nuevo Disco 10", 99);
+$gestor->actualizarPista(20, "Nuevo Disco 20", 99);
 
-//Eliminamos 2 productos
-$gestor->eliminar(30);
-$gestor->eliminar(40);
+$gestor->eliminarPista(30);
+$gestor->eliminarPista(40);
 
-//Listamos
-$productos = $gestor->listar();
+$discos = $gestor->obtenerPistas();
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>CRUD PHP con POO y Arrays</title>
+    <meta charset="UTF-8">
+    <title>Audioteca - Listado de Discos</title>
 </head>
 <body>
 
-<!-- LISTADO -->
-<h2>Listado de discos</h2>
+<h2>Listado de discos de la audioteca</h2>
 
-<?php if (empty($productos)): ?>
-    <p>No hay productos aún.</p>
+<?php if (empty($discos)): ?>
+    <p>No hay discos en la audioteca.</p>
 <?php else: ?>
 
 <table border="1" cellpadding="10">
     <tr>
         <th>ID</th>
-        <th>Nombre</th>
+        <th>Título</th>
+        <th>Artista</th>
+        <th>Género</th>
         <th>Precio</th>
     </tr>
 
-    <?php foreach ($productos as $p): ?>
+    <?php foreach ($discos as $d): ?>
     <tr>
-        <td><?= $p->getId() ?></td>
-        <td><?= $p->getNombre() ?></td>
-        <td><?= $p->getPrecio() ?></td>
+        <td><?= $d->getId() ?></td>
+        <td><?= $d->getTitulo() ?></td>
+        <td><?= $d->getArtista() ?></td>
+        <td><?= $d->getGenero() ?></td>
+        <td><?= $d->getPrecio() ?> €</td>
     </tr>
     <?php endforeach; ?>
 </table>

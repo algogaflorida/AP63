@@ -1,23 +1,24 @@
 <?php
 class Vinilo extends Disco {
+
     private $tamano;
     private $velocidad;
     private $color;
     private $edicion;
-    
+
     public function __construct($tam, $vel, $col, $ed, $tit, $art, $gen, $prec, $id){
-        $this->setTamaño($tam);
+        parent::__construct($tit, $art, $gen, $prec, $id);
+        $this->setTamano($tam);
         $this->setVelocidad($vel);
         $this->setColor($col);
         $this->setEdicion($ed);
-        parent::__construct($tit, $art, $gen, $prec, $id);
     }
 
-    public function setTamaño($tam){
+    public function setTamano($tam){
         $this->tamano = $tam;
     }
 
-    public function getTamaño(){
+    public function getTamano(){
         return $this->tamano;
     }
 
@@ -46,8 +47,11 @@ class Vinilo extends Disco {
     }
 
     public function mostrarInfo(){
-        echo "<h3>Vinilos:</h3>";
+        echo "<h3>Vinilo</h3>";
         parent::mostrarInfo();
-        echo "Tamaño del vinilo: " . getTamaño() . "<br>Velocidad: " . getVelocidad() . "<br>Color del vinilo: " . getColor() . "<br>Edición: " . getEdicion() . "<br>";
+        echo "Tamaño del vinilo: " . $this->getTamano() . "<br>";
+        echo "Velocidad: " . $this->getVelocidad() . "<br>";
+        echo "Color del vinilo: " . $this->getColor() . "<br>";
+        echo "Edición: " . $this->getEdicion() . "<br>";
     }
 }
