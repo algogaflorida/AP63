@@ -47,6 +47,14 @@ class Disco {
         return $this->precio;
     }
 
+    public function setId ($id){
+        $this->id=$id;
+    }
+
+    public function getId(){
+        return $this->id;
+    }
+
     public function mostrarInfo(){
         echo "Título: " . getTitulo() . "<br>Artista: " . getArtista() . "<br>Género: " . getGenero() . "<br>Precio: " . getPrecio() . "<br>";
     }
