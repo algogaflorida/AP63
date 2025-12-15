@@ -1,19 +1,24 @@
 <?php
+session_start();
 require_once 'autoloader.php';
+
 $gestor = new Audioteca();
-
-for ($i = 1; $i <= 50; $i++) {
-    $disco = new Disco("Disco $i", "Artista $i", "Género $i", $i * 10, $i);
-    $gestor->agregarPista($disco);
-}
-
-$gestor->actualizarPista(10, "Nuevo Disco 10", 99);
-$gestor->actualizarPista(20, "Nuevo Disco 20", 99);
-
-$gestor->eliminarPista(30);
-$gestor->eliminarPista(40);
-
 $discos = $gestor->obtenerPistas();
+
+$accion = $_GET['accion'] ?? null;
+
+if ($accion === 'crear') {
+    $disco = new Disco($tit, $art, $gen, $prec, $id);
+    $gestor->agregarPista($disco);
+    header("Location: index.php");
+    exit;
+} elseif ($accion === 'editar'){
+    $gestor->actualizarPista($id, $titulo, $duracion);
+    header("Location: index.php");
+} elseif ($accion === 'eliminar') {
+    $gestor->eliminarPista($id);
+    header("Location: index.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +35,7 @@ $discos = $gestor->obtenerPistas();
     <p>No hay discos en la audioteca.</p>
 <?php else: ?>
 
+<form method='POST' action='index.php?accion=crear'></form>
 <table border="1" cellpadding="10">
     <tr>
         <th>ID</th>
@@ -46,11 +52,35 @@ $discos = $gestor->obtenerPistas();
         <td><?= $d->getArtista() ?></td>
         <td><?= $d->getGenero() ?></td>
         <td><?= $d->getPrecio() ?> €</td>
+        <td>
+            <form method='POST' action='index.php?accion=editar'>
+                    <label for="id">ID</label><br>
+                        <input type="text" id="identificador" name="id" required><p>
+                    <label for="titulo">Título</label><br>
+                        <input type="text" name="titulo" id="titulo" required><p>
+                    <label for="duracion">Duración</label><br>
+                        <input type="text" id="duracion" name="duracion" required><p>
+            </form>
+
+            <a href="index.php?accion=eliminar&id=<?= $d->getId() ?>">Eliminar</a>
     </tr>
     <?php endforeach; ?>
 </table>
+<?php
+class Audioteca {
 
+    public function __construct() {
+        if (!isset($_SESSION['discos'])) {
+            $_SESSION['discos'] = [];
+        }
+    }
+
+    /* Añade una nueva pista a la audioteca */
+    public function agregarPista($nuevaPista){
+            $_SESSION['discos'][] = $nuevaPista;
+    }
+}
+?>
 <?php endif; ?>
-
 </body>
 </html>

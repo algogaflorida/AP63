@@ -1,22 +1,20 @@
 <?php
 class Audioteca {
 
-    /* Almacena las pistas de audio de la audioteca */
-    private $pistas;
-
-    /* Añade una nueva pista a la audioteca */
-    public function agregarPista($nuevaPista){
-        $this->pistas[] = $nuevaPista;
+    public function __construct() {
+        if (!isset($_SESSION['pistas'])) {
+            $_SESSION['pistas'] = [];
+        }
     }
 
     /* Devuelve todas las pistas almacenadas */
-    public function obtenerPistas(){
-        return $this->pistas;
+    public function obtenerPistas() {
+        return $_SESSION['pistas'];
     }
 
     /* Busca una pista por su ID */
-    public function buscarPista($id){
-        foreach ($this->pistas as $pista) {
+    public function buscarPista($id) {
+        foreach ($_SESSION['pistas'] as $pista) {
             if ($pista->getId() == $id) {
                 return $pista;
             }
@@ -25,30 +23,33 @@ class Audioteca {
     }
 
     /* Actualiza los datos de una pista existente */
-    public function actualizarPista($id, $titulo, $duracion){
-        $pista = $this->buscarPista($id);
-
-        if ($pista !== null) {
-            $pista->setTitulo($titulo);
-            $pista->setPrecio($duracion); 
-            return true;
+    public function actualizarPista($id, $titulo, $duracion) {
+        foreach ($_SESSION['pistas'] as $i => $pista) {
+            if ($pista->getId() == $id) {
+                $pista->setTitulo($titulo);
+                $pista->setPrecio($duracion); // si es duración, ajusta el setter
+                $_SESSION['pistas'][$i] = $pista;
+                return true;
+            }
         }
-
         return false;
     }
 
     /* Elimina una pista de la audioteca */
-    public function eliminarPista($id){
-
-        foreach ($this->pistas as $i => $pista) {
+    public function eliminarPista($id) {
+        foreach ($_SESSION['pistas'] as $i => $pista) {
             if ($pista->getId() == $id) {
-                unset($this->pistas[$i]);
-                $this->pistas = array_values($this->pistas);
+                unset($_SESSION['pistas'][$i]);
+                $_SESSION['pistas'] = array_values($_SESSION['pistas']);
                 return true;
             }
         }
-
         return false;
+    }
+
+    /* Añade una nueva pista */
+    public function agregarPista($nuevaPista) {
+        $_SESSION['pistas'][] = $nuevaPista;
     }
 }
 
